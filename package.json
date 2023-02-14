@@ -6,7 +6,7 @@
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
-        "vscode": "^1.72.0"
+        "vscode": "^1.75.0"
     },
     "categories": [
         "Other"
