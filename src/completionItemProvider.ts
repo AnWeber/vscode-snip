@@ -3,7 +3,8 @@ import { ConfigVariable } from './configVariable';
 import * as provider from './provider';
 
 export class CompletionItemProvider implements vscode.CompletionItemProvider<ConfigVariable> {
-  subscriptions: Array<{ dispose: () => void }>;
+  completionItemsProvider: Array<{ dispose: () => void }>;
+  private configChanged: vscode.Disposable;
 
   private providers: Record<string, provider.Provider> = {
     dotenv: provider.dotenvProvider,
@@ -13,12 +14,32 @@ export class CompletionItemProvider implements vscode.CompletionItemProvider<Con
   };
 
   constructor() {
-    this.subscriptions = [
-      vscode.languages.registerCompletionItemProvider({ language: 'typescript', scheme: '*' }, this),
-    ];
+    this.completionItemsProvider = [];
+    this.registerCompletionItems();
+    this.configChanged = vscode.workspace.onDidChangeConfiguration(e => {
+      if (e.affectsConfiguration("snip")) {
+        this.resetCompletionItemsProvider();
+        this.registerCompletionItems();
+      }
+    });
   }
+  private registerCompletionItems() {
+    const languages = this.getVariables().reduce((prev, { language }) => {
+      prev.add(language);
+      return prev;
+    }, new Set<string>());
+
+    for (const language of languages) {
+      const disposable = vscode.languages.registerCompletionItemProvider({ language, scheme: '*' }, this);
+      this.completionItemsProvider.push(disposable);
+    }
+  }
+
   public provideCompletionItems(document: vscode.TextDocument): Array<ConfigVariable> {
-    return this.getVariables().map(obj => ({
+
+    return this.getVariables()
+      .filter(obj => obj.language === document.languageId)
+      .map(obj => ({
       ...obj,
       uri: document.uri,
     }));
@@ -55,9 +76,14 @@ export class CompletionItemProvider implements vscode.CompletionItemProvider<Con
   }
 
   dispose(): void {
-    if (this.subscriptions) {
-      this.subscriptions.forEach(obj => obj.dispose());
-      this.subscriptions = [];
+    this.resetCompletionItemsProvider();
+    this.configChanged.dispose();
+  }
+
+  private resetCompletionItemsProvider() {
+    if (this.completionItemsProvider) {
+      this.completionItemsProvider.forEach(obj => obj.dispose());
+      this.completionItemsProvider = [];
     }
   }
 
