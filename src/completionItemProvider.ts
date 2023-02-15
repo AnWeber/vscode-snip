@@ -6,6 +6,8 @@ export class CompletionItemProvider implements vscode.CompletionItemProvider<Con
   subscriptions: Array<{ dispose: () => void }>;
 
   private providers: Record<string, provider.Provider> = {
+    dotenv: provider.dotenvProvider,
+    env: provider.envProvider,
     json: provider.jsonProvider,
     yaml: provider.yamlProvider
   };

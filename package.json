@@ -60,13 +60,17 @@
                             "contentProvider": {
                                 "type": "string",
                                 "enum": [
+                                    "dotenv",
+                                    "env",
                                     "json",
-                                    "env"
+                                    "yaml"
                                 ],
                                 "default": "json",
                                 "markdownEnumDescriptions": [
+                                    "use dotenv provider",
+                                    "use process.env provider",
                                     "use json provider",
-                                    "use env"
+                                    "use yaml provider"
                                 ]
                             },
                             "path": {
@@ -138,6 +142,7 @@
         "typescript": "^4.9.5"
     },
     "dependencies": {
+        "dotenv": "^16.0.3",
         "yaml": "^2.2.1"
     }
 }
