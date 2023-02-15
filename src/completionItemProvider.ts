@@ -7,6 +7,7 @@ export class CompletionItemProvider implements vscode.CompletionItemProvider<Con
 
   private providers: Record<string, provider.Provider> = {
     json: provider.jsonProvider,
+    yaml: provider.yamlProvider
   };
 
   constructor() {

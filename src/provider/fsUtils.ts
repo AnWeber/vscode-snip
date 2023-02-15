@@ -63,6 +63,11 @@ export async function iterateDirectoryTree(
   return undefined;
 }
 
+export async function readText(fileName: vscode.Uri): Promise<string> {
+  const fileBuffer = await vscode.workspace.fs.readFile(fileName);
+   return Buffer.from(fileBuffer).toString('utf-8');
+}
+
 export function equalsPath(path: vscode.Uri | undefined, path2: vscode.Uri | undefined): boolean {
   return !!path && !!path2 && path.toString() === path2.toString();
 }
