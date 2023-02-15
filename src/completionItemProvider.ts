@@ -46,6 +46,7 @@ export class CompletionItemProvider implements vscode.CompletionItemProvider<Con
           currentObj = currentObj[segment];
         }
       }
+      return currentObj;
     }
     return `${obj}`;
   }
