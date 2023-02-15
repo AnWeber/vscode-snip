@@ -1,4 +1,4 @@
-## v0.0.1
+## v0.2.0
 
 #### Features
 - add dotenv, yaml and process.env provider
@@ -7,7 +7,7 @@
 #### Fix
 - evaluatePath returns evaluted value
 
-## v0.0.1
+## v0.1.0
 
 #### Features
 
